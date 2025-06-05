@@ -10,7 +10,11 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "zustand": "^4.4.1",
-    "react-beautiful-dnd": "^13.1.1"
+    "react-beautiful-dnd": "^13.1.1",
+    "@mui/material": "^5.14.2",
+    "@mui/icons-material": "^5.14.2",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0"
   },
   "devDependencies": {
     "typescript": "^5.0.0",
