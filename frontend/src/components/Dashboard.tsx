@@ -21,28 +21,57 @@ import {
   ListItem,
   ListItemText,
   CssBaseline,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
 } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
-
-interface Project {
-  id: number;
-  name: string;
-  members: number[];
-}
+import { Project } from '../types';
+import { fetchMockProjects } from '../mockApi';
+import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 240;
 
 export default function Dashboard() {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [copilotOpen, setCopilotOpen] = useState(false);
+  const [question, setQuestion] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('/resources/projects')
-      .then((res) => (res.ok ? res.json() : []))
-      .then((data) => setProjects(data))
-      .catch(() => setProjects([]));
+    const load = async () => {
+      try {
+        const res = await fetch('/resources/projects');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.length > 0) {
+            setProjects(data);
+            return;
+          }
+        }
+        const mock = await fetchMockProjects();
+        setProjects(mock);
+      } catch {
+        const mock = await fetchMockProjects();
+        setProjects(mock);
+      }
+    };
+    load();
   }, []);
+
+  const handleAsk = () => {
+    fetch('/events', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question }),
+    }).catch(() => {});
+    setQuestion('');
+    setCopilotOpen(false);
+  };
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -74,7 +103,12 @@ export default function Dashboard() {
       >
         <Toolbar />
         <Box sx={{ p: 2 }}>
-          <Button variant="contained" fullWidth sx={{ mb: 2 }}>
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{ mb: 2 }}
+            onClick={() => setCopilotOpen(true)}
+          >
             Ask the Copilot
           </Button>
           <List>
@@ -91,6 +125,20 @@ export default function Dashboard() {
         <Toolbar />
         <Container maxWidth="lg">
           <Grid container spacing={3}>
+            <Grid item xs={12}>
+              <Card sx={{ textAlign: 'center', p: 2, mb: 2 }}>
+                <Button variant="contained" onClick={() => setCopilotOpen(true)}>
+                  Ask the Copilot
+                </Button>
+              </Card>
+            </Grid>
+            <Grid item xs={12}>
+              <Card sx={{ textAlign: 'center', p: 2 }}>
+                <Button variant="outlined" onClick={() => navigate('/kanban')}>
+                  View Kanban Board
+                </Button>
+              </Card>
+            </Grid>
             {projects.map((project) => {
               const progress = Math.floor(Math.random() * 80) + 10;
               return (
@@ -128,6 +176,24 @@ export default function Dashboard() {
           </Grid>
         </Container>
       </Box>
+      <Dialog open={copilotOpen} onClose={() => setCopilotOpen(false)}>
+        <DialogTitle>Ask the Copilot</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Your question"
+            fullWidth
+            variant="outlined"
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setCopilotOpen(false)}>Cancel</Button>
+          <Button variant="contained" onClick={handleAsk}>Send</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
