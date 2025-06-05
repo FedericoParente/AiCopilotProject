@@ -9,7 +9,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import Layout from './Layout';
 
 interface Task {
   id: number;
@@ -98,8 +97,7 @@ export default function KanbanBoard() {
   };
 
   return (
-    <Layout>
-      <Box sx={{ display: 'flex', gap: 2, p: 2, overflowX: 'auto' }}>
+    <Box sx={{ display: 'flex', gap: 2, p: 2, overflowX: 'auto' }}>
         {statuses.map((status) => (
           <Box
             key={status}
@@ -123,6 +121,5 @@ export default function KanbanBoard() {
           </Box>
         ))}
       </Box>
-    </Layout>
   );
 }

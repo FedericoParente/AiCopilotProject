@@ -25,7 +25,6 @@ import {
   TextField,
 } from '@mui/material';
 
-import Layout from './Layout';
 import { useNavigate } from 'react-router-dom';
 import { Project } from '../types';
 import { fetchMockProjects } from '../mockApi';
@@ -70,8 +69,7 @@ export default function Dashboard() {
   };
 
   return (
-    <Layout>
-      <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex' }}>
       <Drawer
         variant="permanent"
         anchor="right"
@@ -174,6 +172,5 @@ export default function Dashboard() {
         </DialogActions>
       </Dialog>
     </Box>
-    </Layout>
   );
 }
