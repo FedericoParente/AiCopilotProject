@@ -30,9 +30,9 @@ import {
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
+import { useNavigate } from 'react-router-dom';
 import { Project } from '../types';
 import { fetchMockProjects } from '../mockApi';
-import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 240;
 

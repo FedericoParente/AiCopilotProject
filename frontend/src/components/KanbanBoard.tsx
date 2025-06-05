@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 
 interface Task {
@@ -9,22 +9,25 @@ interface Task {
 
 const statuses = ['To Do', 'In Progress', 'Review', 'Done'];
 
+// Sample tasks for testing
+const initialTasks: Task[] = [
+  { id: 1, name: 'Design UI', status: 'To Do' },
+  { id: 2, name: 'Set up backend', status: 'In Progress' },
+  { id: 3, name: 'Write tests', status: 'Review' },
+  { id: 4, name: 'Deploy to production', status: 'Done' },
+];
+
 export default function KanbanBoard() {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<Task[]>(initialTasks);
 
-  useEffect(() => {
-    fetch('/resources/tasks')
-      .then((res) => (res.ok ? res.json() : []))
-      .then((data) => setTasks(data))
-      .catch(() => setTasks([]));
-  }, []);
-
+  // Handler for drag-and-drop end event
   const onDragEnd = (result: DropResult) => {
     const { source, destination, draggableId } = result;
     if (!destination) return;
-
+    // If dropped in same column, do nothing
     if (source.droppableId === destination.droppableId) return;
 
+    // Update task status based on destination column
     setTasks((prev) =>
       prev.map((t) =>
         t.id.toString() === draggableId ? { ...t, status: destination.droppableId } : t
@@ -48,11 +51,11 @@ export default function KanbanBoard() {
                   .filter((t) => t.status === status)
                   .map((task, index) => (
                     <Draggable draggableId={task.id.toString()} index={index} key={task.id}>
-                      {(prov) => (
+                      {(providedDraggable) => (
                         <div
-                          ref={prov.innerRef}
-                          {...prov.draggableProps}
-                          {...prov.dragHandleProps}
+                          ref={providedDraggable.innerRef}
+                          {...providedDraggable.draggableProps}
+                          {...providedDraggable.dragHandleProps}
                           className="bg-white p-2 mb-2 rounded shadow"
                         >
                           {task.name}
