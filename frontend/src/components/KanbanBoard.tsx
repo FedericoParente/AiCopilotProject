@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, ReactNode } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
 
 interface Task {
@@ -17,17 +17,39 @@ const initialTasks: Task[] = [
   { id: 4, name: 'Deploy to production', status: 'Done' },
 ];
 
-export default function KanbanBoard() {
+// Props for a customizable task item
+interface TaskItemProps {
+  task: Task;
+}
+
+// Mock TaskItem component to be customized later
+function TaskItem({ task }: TaskItemProps) {
+  // Render logic can be replaced with custom UI
+  return (
+    <div className="bg-white p-2 mb-2 rounded shadow">
+      <strong>{task.name}</strong>
+    </div>
+  );
+}
+
+type KanbanBoardProps = {
+  renderTask?: (task: Task) => ReactNode;
+};
+
+export default function KanbanBoard({ renderTask }: KanbanBoardProps) {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
+
+  // Use provided renderer or default TaskItem
+  const renderTaskNode = (task: Task) => {
+    return renderTask ? renderTask(task) : <TaskItem task={task} />;
+  };
 
   // Handler for drag-and-drop end event
   const onDragEnd = (result: DropResult) => {
     const { source, destination, draggableId } = result;
     if (!destination) return;
-    // If dropped in same column, do nothing
     if (source.droppableId === destination.droppableId) return;
 
-    // Update task status based on destination column
     setTasks((prev) =>
       prev.map((t) =>
         t.id.toString() === draggableId ? { ...t, status: destination.droppableId } : t
@@ -56,9 +78,8 @@ export default function KanbanBoard() {
                           ref={providedDraggable.innerRef}
                           {...providedDraggable.draggableProps}
                           {...providedDraggable.dragHandleProps}
-                          className="bg-white p-2 mb-2 rounded shadow"
                         >
-                          {task.name}
+                          {renderTaskNode(task)}
                         </div>
                       )}
                     </Draggable>
