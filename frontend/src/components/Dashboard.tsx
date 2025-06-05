@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
-  AppBar,
   Toolbar,
   Typography,
-  IconButton,
   Box,
   Container,
   Grid,
@@ -20,16 +18,13 @@ import {
   List,
   ListItem,
   ListItemText,
-  CssBaseline,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   TextField,
 } from '@mui/material';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
+
 import { useNavigate } from 'react-router-dom';
 import { Project } from '../types';
 import { fetchMockProjects } from '../mockApi';
@@ -75,23 +70,6 @@ export default function Dashboard() {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBar position="fixed">
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            AI Copilot
-          </Typography>
-          <IconButton color="inherit" size="large">
-            <Brightness4Icon />
-          </IconButton>
-          <IconButton color="inherit" size="large">
-            <NotificationsIcon />
-          </IconButton>
-          <IconButton color="inherit" size="large">
-            <AccountCircle />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
       <Drawer
         variant="permanent"
         anchor="right"
@@ -122,7 +100,6 @@ export default function Dashboard() {
         </Box>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3, mr: `${drawerWidth}px` }}>
-        <Toolbar />
         <Container maxWidth="lg">
           <Grid container spacing={3}>
             <Grid item xs={12}>

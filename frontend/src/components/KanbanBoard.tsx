@@ -103,42 +103,28 @@ export default function KanbanBoard() {
 
   return (
     <Box sx={{ display: 'flex', gap: 2, p: 2, overflowX: 'auto' }}>
-      {statuses.map((status) => (
-        <Paper
-          key={status}
-          onDragOver={(e) => {
-            e.preventDefault();
-            setDropTarget(status);
-          }}
-          onDragLeave={() => setDropTarget(null)}
-          onDrop={() => handleDrop(status)}
-          elevation={3}
-          sx={{
-            width: 260,
-            minHeight: 360,
-            p: 2,
-            borderRadius: 2,
-            bgcolor: dropTarget === status ? 'primary.light' : 'grey.100',
-            transition: 'background-color .2s',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          <Typography variant="h6" align="center" gutterBottom>
-            {status}
-          </Typography>
-          {tasks
-            .filter((t) => t.status === status)
-            .map((task) => (
-              <TaskItem
-                key={task.id}
-                task={task}
-                onUpdateName={updateTaskName}
-                onDragStart={handleDragStart}
-              />
-            ))}
-        </Paper>
-      ))}
-    </Box>
+        {statuses.map((status) => (
+          <Box
+            key={status}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={() => handleDrop(status)}
+            sx={{ width: 260, minHeight: 300, bgcolor: '#f5f5f5', p: 1, borderRadius: 1 }}
+          >
+            <Typography variant="h6" align="center" gutterBottom>
+              {status}
+            </Typography>
+            {tasks
+              .filter((t) => t.status === status)
+              .map((task) => (
+                <TaskItem
+                  key={task.id}
+                  task={task}
+                  onUpdateName={updateTaskName}
+                  onDragStart={handleDragStart}
+                />
+              ))}
+          </Box>
+        ))}
+      </Box>
   );
 }
