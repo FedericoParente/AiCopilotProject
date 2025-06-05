@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
+import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -42,17 +41,21 @@ function TaskItem({ task, onUpdateName, onDragStart }: TaskItemProps) {
 
   return (
     <>
-      <Card
-        variant="outlined"
-        sx={{ cursor: 'grab', mb: 1 }}
+      <Paper
+        elevation={1}
+        sx={{
+          p: 1,
+          mb: 1,
+          cursor: 'grab',
+          transition: 'box-shadow .2s',
+          '&:hover': { boxShadow: 3 },
+        }}
         draggable
         onDragStart={() => onDragStart(task.id)}
         onClick={() => setOpen(true)}
       >
-        <CardContent sx={{ p: 1 }}>
-          <Typography>{task.name}</Typography>
-        </CardContent>
-      </Card>
+        <Typography variant="body2">{task.name}</Typography>
+      </Paper>
 
       <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="xs">
         <DialogTitle>Edit Task</DialogTitle>
@@ -81,6 +84,7 @@ function TaskItem({ task, onUpdateName, onDragStart }: TaskItemProps) {
 export default function KanbanBoard() {
   const [tasks, setTasks] = useState<Task[]>(initialTasks);
   const [draggedId, setDraggedId] = useState<number | null>(null);
+  const [dropTarget, setDropTarget] = useState<string | null>(null);
 
   const updateTaskName = (id: number, newName: string) => {
     setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, name: newName } : t)));
@@ -94,6 +98,7 @@ export default function KanbanBoard() {
     if (draggedId === null) return;
     setTasks((prev) => prev.map((t) => (t.id === draggedId ? { ...t, status } : t)));
     setDraggedId(null);
+    setDropTarget(null);
   };
 
   return (
