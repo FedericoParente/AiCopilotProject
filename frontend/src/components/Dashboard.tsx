@@ -30,6 +30,7 @@ import {
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
+import { useNavigate } from 'react-router-dom';
 import { Project } from '../types';
 import { fetchMockProjects } from '../mockApi';
 
@@ -39,6 +40,7 @@ export default function Dashboard() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [copilotOpen, setCopilotOpen] = useState(false);
   const [question, setQuestion] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const load = async () => {
@@ -101,7 +103,12 @@ export default function Dashboard() {
       >
         <Toolbar />
         <Box sx={{ p: 2 }}>
-          <Button variant="contained" fullWidth sx={{ mb: 2 }}>
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{ mb: 2 }}
+            onClick={() => setCopilotOpen(true)}
+          >
             Ask the Copilot
           </Button>
           <List>
@@ -119,9 +126,16 @@ export default function Dashboard() {
         <Container maxWidth="lg">
           <Grid container spacing={3}>
             <Grid item xs={12}>
-              <Card sx={{ textAlign: 'center', p: 2 }}>
+              <Card sx={{ textAlign: 'center', p: 2, mb: 2 }}>
                 <Button variant="contained" onClick={() => setCopilotOpen(true)}>
                   Ask the Copilot
+                </Button>
+              </Card>
+            </Grid>
+            <Grid item xs={12}>
+              <Card sx={{ textAlign: 'center', p: 2 }}>
+                <Button variant="outlined" onClick={() => navigate('/kanban')}>
+                  View Kanban Board
                 </Button>
               </Card>
             </Grid>
